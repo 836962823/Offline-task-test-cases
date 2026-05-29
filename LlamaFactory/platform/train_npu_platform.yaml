@@ -1,0 +1,41 @@
+### Discovery platform smoke: NPU LoRA SFT (minimal dataset, platform TB + results paths)
+
+### model
+model_name_or_path: Qwen/Qwen2.5-0.5B-Instruct
+trust_remote_code: true
+
+### method
+stage: sft
+do_train: true
+finetuning_type: lora
+lora_rank: 8
+lora_target: all
+
+### dataset (platform mounts /data/datasets or use image-bundled ./data)
+dataset_dir: /data/datasets
+dataset: alpaca_en_demo
+template: qwen
+cutoff_len: 512
+max_samples: 50
+overwrite_cache: true
+preprocessing_num_workers: 2
+dataloader_num_workers: 0
+
+### output — checkpoints under /data; TB via PLATFORM_TRAIN_SMOKE + TENSORBOARD_LOGDIR
+output_dir: /data/sft_output
+logging_steps: 5
+save_steps: 100
+plot_loss: false
+overwrite_output_dir: true
+save_only_model: false
+report_to: none
+
+### train (Ascend NPU)
+per_device_train_batch_size: 1
+gradient_accumulation_steps: 2
+learning_rate: 1.0e-4
+num_train_epochs: 1.0
+lr_scheduler_type: cosine
+warmup_ratio: 0.1
+bf16: true
+ddp_timeout: 180000000
