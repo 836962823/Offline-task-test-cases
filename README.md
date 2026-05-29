@@ -9,7 +9,7 @@ Discovery **离线训练任务**端到端冒烟用例集合，与 `discovery-ml-
 | **Neural（Iris）** | 仓库 [`neural-networks-from-scratch`](../neural-networks-from-scratch/) | NumPy 小网络；**不需 NPU**|
 | **LlamaFactory NPU SFT** | [`LlamaFactory/`](./LlamaFactory/) | 昇腾 LoRA 冒烟；`platform/run_train.sh` + `train_npu_platform.yaml` |
 
-统一运行镜像：[`discovery-train-image`](../discovery-train-image/) → `registry2.d.pjlab.org.cn/ccr-discovery/train-npu-smoke:v1-a2cann-arm64`。
+选用镜像：`cann 8.3rc2 / pytorch 2.8.0 / torch_npu 2.8.0 / python 3.11 arrm64(训练任务测试用)`。
 
 
 ## LlamaFactory 子目录
