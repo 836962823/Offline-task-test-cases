@@ -25,7 +25,7 @@ Discovery **离线训练任务**端到端冒烟用例集合，与 `discovery-ml-
 
 ```bash
 # Neural（无需 source CANN）
-bash /usr/local/bin/run-neural-smoke.sh
+python3 /workspace/neural/simple_neural_network_iris_example.py --epochs 100
 
 # LlamaFactory（建议 train-entrypoint 加载 Ascend）
 export HF_ENDPOINT=https://hf-mirror.com #没有该命令从HF拉取权重时可能会出现超时问题
