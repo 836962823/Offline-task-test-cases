@@ -9,8 +9,12 @@ fi
 
 export PLATFORM_TRAIN_SMOKE=1
 export HF_HOME="${HF_HOME:-/data/.cache/huggingface}"
+export HF_HUB_CACHE="${HF_HUB_CACHE:-${HF_HOME}/hub}"
+export TRANSFORMERS_CACHE="${TRANSFORMERS_CACHE:-${HF_HOME}/hub}"
 export ASCEND_RT_VISIBLE_DEVICES="${ASCEND_RT_VISIBLE_DEVICES:-0}"
 export NPROC_PER_NODE="${NPROC_PER_NODE:-1}"
+# Clear HF cache after each run so a partial/corrupt download on shared PVC does not break the next job.
+export CLEAN_HF_CACHE_ON_EXIT="${CLEAN_HF_CACHE_ON_EXIT:-1}"
 
 # Per-run output dirs: /data/sft_output/{RUN_ID}, /data/data/{RUN_ID}/train_result.json
 RUN_ID="${TRAIN_RUN_ID:-$(date -u +%Y%m%d-%H%M%S)}"
@@ -76,10 +80,23 @@ echo "TB_LOGDIR=${TB_LOGDIR}"
 echo "OUTPUT_DIR=${OUTPUT_DIR}"
 echo "RESULTS_DIR=${RESULTS_DIR}"
 echo "HF_HOME=${HF_HOME}"
+echo "HF_HUB_CACHE=${HF_HUB_CACHE}"
+echo "CLEAN_HF_CACHE_ON_EXIT=${CLEAN_HF_CACHE_ON_EXIT}"
 echo "DATASET_DIR=${DATASET_DIR}"
 echo "ASCEND_RT_VISIBLE_DEVICES=${ASCEND_RT_VISIBLE_DEVICES}"
 
-exec llamafactory-cli train platform/train_npu_platform.yaml \
+cleanup_hf_cache() {
+  local ec=$?
+  if [[ "${CLEAN_HF_CACHE_ON_EXIT}" == "1" && -n "${HF_HOME}" && -d "${HF_HOME}" ]]; then
+    echo "[cleanup] Removing Hugging Face cache under ${HF_HOME} (train exit=${ec})"
+    rm -rf "${HF_HOME:?}"/*
+  fi
+  exit "${ec}"
+}
+trap cleanup_hf_cache EXIT
+
+# Do not use exec: EXIT trap must run after training (success or failure).
+llamafactory-cli train platform/train_npu_platform.yaml \
   "dataset_dir=${FINAL_DATASET_DIR}" \
   "output_dir=${OUTPUT_DIR}" \
   "${USER_ARGS[@]}"

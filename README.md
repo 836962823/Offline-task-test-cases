@@ -31,6 +31,7 @@ python3 /workspace/neural/simple_neural_network_iris_example.py --epochs 100
 export HF_ENDPOINT=https://hf-mirror.com #没有该命令从HF拉取权重时可能会出现超时问题
 export DATASET_DIR=/mnt/datasets/<user>/<dataset> 
 bash /app/platform/run_train.sh
+# 训练结束会自动清理 $HF_HOME 缓存，避免云盘残留损坏权重影响下次运行（CLEAN_HF_CACHE_ON_EXIT=0 可关闭）
 ```
 
 ##  输出结果示例
