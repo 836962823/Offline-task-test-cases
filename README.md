@@ -10,7 +10,9 @@ Discovery **离线训练任务**端到端冒烟用例集合，与 `discovery-ml-
 | **LlamaFactory NPU SFT** | [`LlamaFactory/`](./LlamaFactory/) | 昇腾 LoRA 冒烟；`platform/run_train.sh` + `train_npu_platform.yaml` |
 | **Open-Assistant GPU SFT** | [`OpenAssistant/`](./OpenAssistant/) | P 集群 GPU 冒烟；`galactica-125m` + `webgpt`；TB `/var/log/training`，结果 `/data/result/{RUN_ID}` |
 
-选用镜像：`cann 8.3rc2 / pytorch 2.8.0 / torch_npu 2.8.0 / python 3.11 arrm64(训练任务测试用)`。
+选用镜像：
+NPU `cann 8.3rc2 / pytorch 2.8.0 / torch_npu 2.8.0 / python 3.11 arrm64(训练任务测试用)` 
+GPU  `cuda 12.8 / pytorch 2.7.1 / python 3.11`
 
 
 ## Open-Assistant 子目录（P 集群 GPU）
@@ -23,7 +25,7 @@ Discovery **离线训练任务**端到端冒烟用例集合，与 `discovery-ml-
 
 ```bash
 export HF_ENDPOINT=https://hf-mirror.com
-bash /data/projects/open-assistant/platform/run_train.sh
+bash Open-Assistant/platform/run_train.sh
 ```
 
 ## LlamaFactory 子目录
